@@ -1,0 +1,13 @@
+{
+  "name": "adapt-authoring-config",
+  "version": "0.0.1",
+  "description": "A configuration module for the Adapt authoring tool.",
+  "main": "index.js",
+  "adapt_authoring": {
+    "module": true
+  },
+  "dependencies": {
+    "adapt-authoring-core": "git+https://github.com/taylortom/adapt-authoring-core.git",
+    "nconf": "0.10.0"
+  }
+}
