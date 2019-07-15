@@ -4,7 +4,14 @@
   "description": "A configuration module for the Adapt authoring tool.",
   "main": "index.js",
   "adapt_authoring": {
-    "utility": true
+    "module": true,
+    "utility": true,
+    "documentation": {
+      "enable": true,
+      "includes": {
+        "docs": "docs/*"
+      }
+    }
   },
   "dependencies": {
     "adapt-authoring-core": "git+https://github.com/taylortom/adapt-authoring-core.git",

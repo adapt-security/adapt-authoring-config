@@ -1,2 +1,3 @@
-const Config = require('./lib/config');
-module.exports = Config;
+const Module = require('./lib/module');
+const Utility = require('./lib/utility');
+module.exports = { Module, Utility };
