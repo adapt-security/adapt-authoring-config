@@ -5,7 +5,7 @@
   "main": "index.js",
   "adapt_authoring": {
     "module": true,
-    "utility": true,
+    "utility": "config",
     "documentation": {
       "enable": true,
       "includes": {
