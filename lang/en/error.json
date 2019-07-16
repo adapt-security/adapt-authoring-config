@@ -2,5 +2,5 @@
   "configfile": "Errors in config file",
   "incorrectconfigtype": "'%{attr}' should be %{expectedType} (got %{actualType})",
   "configvalidation": "Config value '%{attr}' failed validation (%{val})",
-  "missingconfigval": "Missing required value '%{attr}' (${type})"
+  "missingconfigval": "Missing required value '%{attr}' (%{type})"
 }
