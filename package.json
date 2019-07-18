@@ -2,6 +2,7 @@
   "name": "adapt-authoring-config",
   "version": "0.0.1",
   "description": "A configuration module for the Adapt authoring tool.",
+  "homepage": "https://github.com/taylortom/adapt-authoring-config",
   "main": "index.js",
   "adapt_authoring": {
     "module": true,
