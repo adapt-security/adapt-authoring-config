@@ -13,6 +13,9 @@
         "source": "lib/*",
         "docs": "docs/*"
       }
+    },
+    "testing": {
+      "tests": "test/*.spec.js"
     }
   },
   "dependencies": {
