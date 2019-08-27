@@ -19,7 +19,7 @@ describe('Config utils', function() {
     it('should be able to load a valid schema file', function() {
       const dir = path.join(__dirname, 'data');
       const contents = utils.loadConfigSchema(dir);
-      assert.deepEqual(contents, require(dir, 'conf', 'config.schema.js'));
+      assert.deepEqual(contents, require(path.join(dir, 'conf', 'config.schema.js')));
     });
     it('should not error on a missing schema file', function() {
       const dir = path.join(__dirname, 'data');
