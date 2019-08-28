@@ -22,8 +22,7 @@ describe('Config utils', function() {
       assert.deepEqual(contents, require(path.join(dir, 'conf', 'config.schema.js')));
     });
     it('should not error on a missing schema file', function() {
-      const dir = path.join(__dirname, 'data');
-      const contents = utils.loadConfigSchema(dir);
+      const contents = utils.loadConfigSchema(path.join(__dirname, 'doesntexist'));
       assert.equal(contents, undefined);
     });
   });
