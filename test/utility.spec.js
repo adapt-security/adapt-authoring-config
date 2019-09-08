@@ -1,29 +1,42 @@
 const assert = require('assert');
-
+const Config = require('../lib/utility');
+const path = require('path');
+/*
+TODO:
+- Check module config loaded
+- Check config.schema validation: type & validator
+*/
 describe('Config utility', function() {
+  before(function() {
+    this.config = new Config({ dependencies: {} }, {});
+    this.configJson = require(path.join(process.cwd(), 'conf', 'testing.config.js'));
+  });
+  describe('#has()', function() {
+    it('should be able to verify a value exists', function() {
+      assert(this.config.has('adapt-authoring-testing.test'));
+    });
+    it('should be able to verify a value doesn\'t exist', function() {
+      assert(!this.config.has('adapt-authoring-testing.nonono'));
+    });
+  });
   describe('#get()', function() {
     it('should be able to retrieve a value', function() {
-      assert(false);
+      assert.equal(
+        this.config.get('adapt-authoring-testing.test'),
+        this.configJson['adapt-authoring-testing'].test
+      );
     });
   });
   describe('#set()', function() {
     it('should be able to set a value', function() {
-      assert(false);
-    });
-  });
-  describe('#get()', function() {
-    it('should be able to verify a value exists', function() {
-      assert(false);
+      const newValue = 'newtestvalue';
+      this.config.set('adapt-authoring-testing.test', newValue);
+      assert.equal(this.config.get('adapt-authoring-testing.test'), newValue);
     });
   });
   describe('#getPublicConfig()', function() {
     it('should be able to retrieve values marked as public', function() {
-      assert(false);
+      assert(typeof this.config.getPublicConfig() === 'object');
     });
   });
 });
-/*
-init:
-  check validation
-  check user values are set
-*/
