@@ -1,9 +1,10 @@
 module.exports = {
   definition: {
-    test: {
+    one: {
       type: 'String',
       default: 'default',
-      description: 'Test option'
+      description: 'Test option',
+      public: true
     }
   }
 };
