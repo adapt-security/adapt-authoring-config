@@ -41,8 +41,10 @@ describe('Config utility', function() {
   });
   describe('#getPublicConfig()', function() {
     it('should be able to retrieve values marked as public', function() {
+      this.config.app.dependencies = [{ name: 'adapt-authoring-testing', dir: path.join(__dirname, 'data') }];
+      this.config.initialise();
       const c = this.config.getPublicConfig();
-      assert(typeof c === 'object' && c['test.one'] === 'default');
+      assert(typeof c === 'object' && c['adapt-authoring-testing.one'] === 'default');
     });
   });
 });
