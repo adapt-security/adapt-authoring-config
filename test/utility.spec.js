@@ -1,11 +1,7 @@
 const assert = require('assert');
 const Config = require('../lib/utility');
 const path = require('path');
-/*
-TODO:
-- Check module config loaded
-- Check config.schema validation: type & validator
-*/
+
 describe('Config utility', function() {
   before(function() {
     this.config = new Config({ dependencies: [], lang: { t: k => k } }, {});
