@@ -15,7 +15,7 @@
       }
     },
     "testing": {
-      "tests": "test/*.spec.js"
+      "tests": "tests/*.spec.js"
     }
   },
   "dependencies": {
