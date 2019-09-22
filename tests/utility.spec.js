@@ -4,7 +4,7 @@ const path = require('path');
 
 describe('Config utility', function() {
   before(function() {
-    this.config = new Config({ dependencies: [], lang: { t: k => k } }, {});
+    this.config = new Config(global.ADAPT.app, {});
     this.configJson = require(path.join(process.cwd(), 'conf', 'testing.config.js'));
   });
   describe('#initialise()', function() {
