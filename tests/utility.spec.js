@@ -1,6 +1,6 @@
-const assert = require('assert');
 const Config = require('../lib/utility');
 const path = require('path');
+const should = require('should');
 
 describe('Config utility', function() {
   before(function() {
@@ -14,33 +14,37 @@ describe('Config utility', function() {
   });
   describe('#has()', function() {
     it('should be able to verify a value exists', function() {
-      assert(this.config.has('adapt-authoring-testing.test'));
+      const exists = this.config.has('adapt-authoring-testing.test');
+      exists.should.be.true;
     });
     it('should be able to verify a value doesn\'t exist', function() {
-      assert(!this.config.has('adapt-authoring-testing.nonono'));
+      const exists = this.config.has('adapt-authoring-testing.nonono');
+      exists.should.not.be.true;
     });
   });
   describe('#get()', function() {
     it('should be able to retrieve a value', function() {
-      assert.equal(
-        this.config.get('adapt-authoring-testing.test'),
-        this.configJson['adapt-authoring-testing'].test
-      );
+      const actualValue = this.config.get('adapt-authoring-testing.test');
+      const expectedValue = this.configJson['adapt-authoring-testing'].test;
+      actualValue.should.equal(expectedValue);
     });
   });
   describe('#set()', function() {
     it('should be able to set a value', function() {
       const newValue = 'newtestvalue';
       this.config.set('adapt-authoring-testing.test', newValue);
-      assert.equal(this.config.get('adapt-authoring-testing.test'), newValue);
+      const actualValue = this.config.get('adapt-authoring-testing.test');
+      actualValue.should.equal(newValue);
     });
   });
   describe('#getPublicConfig()', function() {
     it('should be able to retrieve values marked as public', function() {
       this.config.app.dependencies = [{ name: 'adapt-authoring-testing', dir: path.join(__dirname, 'data') }];
       this.config.initialise();
-      const c = this.config.getPublicConfig();
-      assert(typeof c === 'object' && c['adapt-authoring-testing.one'] === 'default');
+      const config = this.config.getPublicConfig();
+      const value = config['adapt-authoring-testing.one'];
+      config.should.be.an.Object();
+      value.should.equal('default');
     });
   });
 });
@@ -50,6 +54,7 @@ function runConfigInitialise(dirname) {
     const l = this.config.errors.length;
     this.config.app.dependencies = [{ name: 'adapt-authoring-testing', dir: path.join(__dirname, 'data', dirname) }];
     this.config.initialise();
-    assert(this.config.errors.length === l+1);
+    const errorCount = this.config.errors.length;
+    errorCount.should.be.exactly(l+1);
   }
 }
