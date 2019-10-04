@@ -13,7 +13,7 @@ describe('Config utils', function() {
     it('should not error on a missing file', function() {
       should.doesNotThrow(function() {
         const contents = utils.loadFile(path.join('this', 'path', 'does', 'not', 'exist.xyz'));
-        should(contents).equal(undefined);
+        should(contents).be.undefined();
       });
     });
   });
@@ -27,7 +27,7 @@ describe('Config utils', function() {
     it('should not error on a missing schema file', function() {
       should.doesNotThrow(function() {
         const contents = utils.loadConfigSchema(path.join(__dirname, 'doesntexist'));
-        should(contents).equal(undefined);
+        should(contents).be.undefined();
       });
     });
   });
