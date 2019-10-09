@@ -7,9 +7,6 @@
   "adapt_authoring": {
     "module": true,
     "utility": "config",
-    "moduleDependencies": {
-      "adapt-authoring-core": "*"
-    },
     "documentation": {
       "enable": true,
       "includes": {
@@ -25,5 +22,8 @@
     "async": "3.1.0",
     "fs-extra": "7.0.0",
     "nconf": "0.10.0"
+  },
+  "peerDependencies": {
+    "adapt-authoring-core": "git+https://github.com/taylortom/adapt-authoring-core.git"
   }
 }
