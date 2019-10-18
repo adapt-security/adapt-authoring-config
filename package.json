@@ -8,14 +8,7 @@
     "module": true,
     "utility": "config",
     "documentation": {
-      "enable": true,
-      "includes": {
-        "source": "lib/*",
-        "docs": "docs/*"
-      }
-    },
-    "testing": {
-      "tests": "tests/*.spec.js"
+      "enable": true
     }
   },
   "dependencies": {
