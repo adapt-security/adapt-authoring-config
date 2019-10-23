@@ -3,5 +3,5 @@
   "incorrectconfigtype": "'%{attr}' should be %{expectedType} (got %{actualType})",
   "configvalidation": "Config value '%{attr}' failed validation (%{val})",
   "missingconfigval": "Missing required value '%{attr}' (%{type})",
-  "missingconfigval": "Config value '%{attr}' cannot be required and have default value"
+  "missingconfigval": "Config value '%{attr}' cannot be required and have a default value"
 }
