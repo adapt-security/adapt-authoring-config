@@ -1,6 +1,6 @@
 {
   "configfile": "Errors in config file",
-  "nonull": "Config value '%{attr}' cannot be null",
+  "nonull": "Config value '%{attr}' cannot be null, expected %{type}",
   "incorrectconfigtype": "'%{attr}' should be %{expectedType} (got %{actualType})",
   "configvalidation": "Config value '%{attr}' failed validation (%{val})",
   "missingconfigval": "Missing required value '%{attr}' (%{type})",
