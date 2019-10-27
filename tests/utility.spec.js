@@ -48,13 +48,14 @@ describe('Config utility', function() {
     });
   });
 });
-
+/**
+* Checks ConfigUtility#initialise
+* Loads the testing data in tests/data/dirname
+*/
 function runConfigInitialise(dirname) {
   return function() {
-    const l = this.config.errors.length;
     this.config.app.dependencies = [{ name: 'adapt-authoring-testing', dir: path.join(__dirname, 'data', dirname) }];
     this.config.initialise();
-    const errorCount = this.config.errors.length;
-    errorCount.should.be.exactly(l+1);
-  }
+    this.config.errors.length.should.be.exactly(1);
+  };
 }
