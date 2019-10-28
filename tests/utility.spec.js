@@ -15,11 +15,11 @@ describe('Config utility', function() {
   describe('#has()', function() {
     it('should be able to verify a value exists', function() {
       const exists = this.config.has('adapt-authoring-testing.test');
-      exists.should.be.true;
+      exists.should.be.true();
     });
     it('should be able to verify a value doesn\'t exist', function() {
       const exists = this.config.has('adapt-authoring-testing.nonono');
-      exists.should.not.be.true;
+      exists.should.not.be.true();
     });
   });
   describe('#get()', function() {
