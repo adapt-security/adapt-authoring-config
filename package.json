@@ -4,13 +4,6 @@
   "description": "A configuration module for the Adapt authoring tool.",
   "homepage": "https://github.com/taylortom/adapt-authoring-config",
   "main": "index.js",
-  "adapt_authoring": {
-    "module": true,
-    "utility": "config",
-    "documentation": {
-      "enable": true
-    }
-  },
   "dependencies": {
     "async": "3.1.0",
     "fs-extra": "7.0.0",
