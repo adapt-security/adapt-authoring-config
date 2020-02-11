@@ -1,8 +1,8 @@
-const Config = require('../lib/utility');
+const Config = require('../lib/configUtils');
 const path = require('path');
 const should = require('should');
 
-describe('Config utility', function() {
+describe('Config module', function() {
   before(function() {
     this.config = new Config(global.ADAPT.app, {});
     this.configJson = require(path.join(process.cwd(), 'conf', 'testing.config.js'));

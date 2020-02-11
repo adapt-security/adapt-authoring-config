@@ -1,5 +1,5 @@
 const path = require('path');
-const utils = require('../lib/utils');
+const utils = require('../lib/configUtils');
 const should = require('should');
 
 describe('Config utils', function() {
