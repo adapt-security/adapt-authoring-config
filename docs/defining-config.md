@@ -5,61 +5,34 @@ As a module developer, you will likely have a number of user-configurable attrib
 The Adapt authoring tool's [configuration module](/identifiers.html#adapt-authoring-config-lib) aims to pre-empt as many of these issues as possible through the use of configuration **schemas**, which can define the following:
 - Required attributes
 - Default values for optional attributes
-- Expected type of value (i.e. number, string, array etc.)
-- Custom validation (`.js` function)
+- Expected type for values (e.g. number, string, array)
+- Validation constraints (see JSON schema spec)
 
 ## Defining module configuration
-_**Note**: it is not mandatory to include a schema for your module, but it may help your general wellbeing..._
+_**Note**: it is not mandatory to include a config schema for your module, but it may help your general wellbeing/code neatness..._
 
-All that's needed to enable this feature is to include a `config.js.schema` to a directory named `conf` in the root of your module.
+All that's needed to enable this feature is to include a `config.schema.json` to a directory named `conf` in the root of your module.
 
-This file must export a JS Object with a definition attribute, i.e.
-```javascript
-module.exports = { definition: {} }
-```
-It is then up to you to list the configuration values for your module.
-
-Each item in your schema can define the following attributes:
-
-| Attribute | Type | Description |
-| --------- | ---- | ----------- |
-| `type` | `String` | Accepted type of the attribute value |
-| `required` | `Boolean` | Whether the user must specify a value for the attribute |
-| `public` | `Boolean` | Whether the attribute is safe for public consumption (i.e. via the UI) |
-| `default` | _Must match `type`_ | A default value for the attribute (doesn't work in conjunction with `required`) |
-| `validator` | `Function` | A function to check the input value is valid (passes attribute value and a reference to the `Config` instance `(val, config) => {}`) |
-| `description` | `String` | Description of the attribute (used in auto-generated documentation) |
+This file must export a valid JSON object. See the JSON schema docs for more information.
 
 ### Example configuration schema
 The below example shows a few common configuration use-cases:
 
-```javascript
-module.exports = {
-  definition: {
-    requiredAttribute: {
-      type: 'Number',
-      required: true,
-      description: 'This option is required'
+```json
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "type": "object",
+  "properties": {
+    "requiredAttribute": {
+      "type": "Number",
+      "description": "This option is required"
     },
-    optionalAttribute: {
-      type: 'String',
-      default: 'This will be the default value',
-      description: 'An optional attribute with a default value'
+    "optionalAttribute": {
+      "type": "String",
+      "default": "This will be the default value",
+      "description": "An optional attribute with a default value"
     },
-    customValidationAttribute: {
-      type: "String",
-      validator: (val, config) => {
-        /**
-         * Function should return true (valid)/false (invalid).
-         * Can use `config` param to get access to the Config module for
-         * attributes which are dependent on other values
-         * e.g. if(config.get('val1')) ...
-         */
-        return val > 5;
-      };
-      description: 'Attribute with a custom validator function'
-    }
-  }
-};
-
+  },
+  "required": ["requiredAttribute"]
+}
 ```
