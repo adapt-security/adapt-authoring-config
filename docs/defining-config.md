@@ -20,7 +20,7 @@ The below example shows a few common configuration use-cases:
 
 ```json
 {
-  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "type": "object",
   "properties": {
     "requiredAttribute": {
