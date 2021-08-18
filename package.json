@@ -6,6 +6,9 @@
   "license": "GPL-3.0",
   "repository": "adaptlearning/adapt-authoring-config",
   "main": "index.js",
+  "directories": {
+    "bin": "./bin"
+  },
   "dependencies": {
     "async": "3.1.0",
     "chalk": "^4.1.0",
