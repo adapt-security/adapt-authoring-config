@@ -1,11 +1,13 @@
 const fs = require('fs-extra');
 const path = require('path');
-const { App } = require('adapt-authoring-core');
 
-const schemas = [];
+class Configuration {
+  constructor(app, config, outputDir) {
+    this.app = app;
+    this.outputDir = outputDir;
+    this.customFiles = [];
+    this.schemas = {};
 
-class Plugin {
-  onHandleConfig() {
     this.loadSchemas();
     this.writeFile({
       'CODE_EXAMPLE': this.generateCodeExample(),
@@ -13,16 +15,16 @@ class Plugin {
     });
   }
   loadSchemas() {
-    Object.values(App.instance.dependencies).forEach(c => {
+    Object.values(this.app.dependencies).forEach(c => {
       const confDir = path.join(c.rootDir, 'conf');
       try {
-        schemas[c.name] = require(path.join(confDir, 'config.schema.json'));
+        this.schemas[c.name] = require(path.join(confDir, 'config.schema.json'));
       } catch(e) {}
     });
   }
   generateCodeExample() {
     let output = '\`\`\`javascript\nmodule.exports = {\n';
-    Object.entries(schemas).forEach(([dep, schema]) => {
+    Object.entries(this.schemas).forEach(([dep, schema]) => {
       output += `  '${dep}': {\n`;
       Object.entries(schema.properties).forEach(([attr, config]) => {
         const required = schema.required && schema.required.includes(attr);
@@ -38,7 +40,7 @@ class Plugin {
   generateList() {
     let output = '';
 
-    Object.entries(schemas).forEach(([dep, schema]) => {
+    Object.entries(this.schemas).forEach(([dep, schema]) => {
       output += `<h3 class="dep">${dep}</h3>\n\n`;
       Object.entries(schema.properties).forEach(([attr, config]) => {
         const required = schema.required && schema.required.includes(attr);
@@ -63,9 +65,11 @@ class Plugin {
   }
   writeFile(data) {
     let file = fs.readFileSync(path.join(__dirname, 'configuration.md')).toString();
+    const outputPath = path.join(this.outputDir, 'configuration.md');
     Object.entries(data).forEach(([key,value]) => file = file.replace(`{{{${key}}}}`, value));
-    fs.writeFileSync(path.join(__dirname, '..', 'temp-configuration.md'), file);
+    fs.writeFileSync(outputPath, file);
+    this.customFiles.push(outputPath);
   }
 }
 
-module.exports = new Plugin();
+module.exports = Configuration;
