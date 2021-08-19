@@ -1,6 +1,7 @@
 {
   "isEssential": true,
   "documentation": {
-    "enable": true
+    "enable": true,
+    "manualPlugins": ["docs/plugins/configuration.js"]
   }
 }
