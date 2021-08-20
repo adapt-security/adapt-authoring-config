@@ -6,8 +6,8 @@
   "license": "GPL-3.0",
   "repository": "adaptlearning/adapt-authoring-config",
   "main": "index.js",
-  "directories": {
-    "bin": "./bin"
+  "bin": {
+    "generate-aat-config": "./bin/generate-aat-config.js"
   },
   "dependencies": {
     "async": "3.1.0",
