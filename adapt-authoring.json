@@ -4,7 +4,8 @@
     "enable": true,
     "manualPlugins": ["docs/plugins/configuration.js"],
     "manualSections": {
-      "configuration-reference.md": "basics"
+      "configuration.md": "getting-started",
+      "defining-config.md": "basics"
     }
   }
 }
