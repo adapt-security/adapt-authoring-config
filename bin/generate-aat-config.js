@@ -1,4 +1,4 @@
-/* eslint no-console: 0 */
+#!/usr/bin/env node
 const { Utils } = require('adapt-authoring-core');
 const fs = require('fs-extra');
 const path = require('path');
