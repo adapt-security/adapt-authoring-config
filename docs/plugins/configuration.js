@@ -10,6 +10,7 @@ class Configuration {
 
     this.loadSchemas();
     this.writeFile({
+      'TABLE_OF_CONTENTS': this.generateTOC(),
       'CODE_EXAMPLE': this.generateCodeExample(),
       'LIST': this.generateList()
     });
@@ -21,6 +22,12 @@ class Configuration {
         this.schemas[c.name] = require(path.join(confDir, 'config.schema.json'));
       } catch(e) {}
     });
+  }
+  generateTOC() {
+    let output = '### Quick navigation\n\n';
+    Object.keys(this.schemas).forEach((dep) => output += `- [${dep}](#${dep})\n`);
+    output += '\n';
+    return output;
   }
   generateCodeExample() {
     let output = '\`\`\`javascript\nmodule.exports = {\n';
@@ -41,17 +48,21 @@ class Configuration {
     let output = '';
 
     Object.entries(this.schemas).forEach(([dep, schema]) => {
-      output += `<h3 class="dep">${dep}</h3>\n\n`;
+      output += `<h3 id="${dep}" class="dep">${dep}</h3>\n\n`;
+      output += `<div class="options">\n`;
       Object.entries(schema.properties).forEach(([attr, config]) => {
         const required = schema.required && schema.required.includes(attr);
-        output += '<div class="attribute">';
-        output += `<div class="title"><span>${attr}</span> (${config.type || ''}, ${required ? 'required' : 'optional'})</div>`;
-        output += `<div class="item">${config.description}</div>`;
+        output += `<div class="attribute">\n`;
+        output += `<div class="title"><span class="main">${attr}</span> (${config.type || ''}, ${required ? 'required' : 'optional'})</div>\n`;
+        output += `<div class="inner">\n`;
+        output += `<div class="description">${config.description}</div>\n`;
         if(!required) {
-          output += `<div class="item small">Default: <pre>${this.defaultToMd(config)}</pre></div>`;
+          output += `<div class="default"><span class="label">Default</span>: <pre>${this.defaultToMd(config)}</pre></div>\n`;
         }
-        output += '</div>';
+        output += `</div>\n`;
+        output += `</div>\n`;
       });
+      output += `</div>`;
       output += `\n\n`;
     });
 
