@@ -2,6 +2,9 @@
   "isEssential": true,
   "documentation": {
     "enable": true,
-    "manualPlugins": ["docs/plugins/configuration.js"]
+    "manualPlugins": ["docs/plugins/configuration.js"],
+    "manualSections": {
+      "configuration-reference.md": "basics"
+    }
   }
 }
