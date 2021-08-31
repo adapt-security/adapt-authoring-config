@@ -7,7 +7,7 @@
   "repository": "adaptlearning/adapt-authoring-config",
   "main": "index.js",
   "bin": {
-    "generate-aat-config": "./bin/generate-aat-config.js"
+    "aat-confgen": "./bin/generate-aat-config.js"
   },
   "dependencies": {
     "async": "3.1.0",
