@@ -24,7 +24,7 @@ class Configuration {
     });
   }
   generateTOC() {
-    let output = '### Quick navigation\n\n';
+    let output = '';
     Object.keys(this.schemas).forEach((dep) => output += `- [${dep}](#${dep})\n`);
     output += '\n';
     return output;

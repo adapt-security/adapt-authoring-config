@@ -1,6 +1,8 @@
 # Configuration reference
 This page lists all configuration options supported by the [core bundle](coreplugins.md) of Adapt authoring modules.
 
+### Quick navigation
+
 {{{TABLE_OF_CONTENTS}}}
 
 ## Quick reference
