@@ -2,7 +2,7 @@
 
 As a module developer, you will likely have a number of user-configurable attributes for adjusting the functionality of your module. This is great from a user perspective as it allows customisation, but can introduce various bugs as a result of bad user input (missing or unexpected values etc.)
 
-The Adapt authoring tool's [configuration module](/identifiers.html#adapt-authoring-config-lib) aims to pre-empt as many of these issues as possible through the use of configuration **schemas**, which can define the following:
+The Adapt authoring tool's configuration module aims to pre-empt as many of these issues as possible through the use of configuration **schemas**, which can define the following:
 - Required attributes
 - Default values for optional attributes
 - Expected type for values (e.g. number, string, array)

@@ -1,5 +1,5 @@
 # Configuration reference
-This page lists all configuration options supported by the [core bundle](coreplugins.md) of Adapt authoring modules.
+This page lists all configuration options supported by the [core bundle](coremodules) of Adapt authoring modules.
 
 ### Quick navigation
 
