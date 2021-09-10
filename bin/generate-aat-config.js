@@ -9,7 +9,7 @@
  const ConfigUtils = require('adapt-authoring-config').Utils;
  
  const NODE_ENV = process.env.NODE_ENV;
- const useDefaults = process.env.aat_defaults && process.env.aat_defaults.match(/true|y/);
+ const useDefaults = Utils.getArgs().defaults;
  const confDir = path.resolve(path.join(process.cwd(), 'conf'));
  const outpath = path.join(confDir, `${NODE_ENV}.config.js`);
  const configJson = {};
