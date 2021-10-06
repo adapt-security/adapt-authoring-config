@@ -30,12 +30,12 @@ For convenience, we've bundled a script which will generate a new config file fo
 
 You can do this by running the following:
 ```bash
-npx aat-confgen [NODE_ENV]
+npx at-confgen [NODE_ENV]
 ```
 
 > If you choose to include the default settings in your configuration, please be aware that once set, these values will not be updated if the defaults change in the future. It is advised therefore that you leave out any settings that you don't wish to change.
 
-See the [Bin scripts](binscripts#aat-confgen) page for more information, included supported flags.
+See the [Bin scripts](binscripts#at-confgen) page for more information, included supported flags.
 
 ### Setting your 'env'
 

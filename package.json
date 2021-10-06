@@ -6,7 +6,7 @@
   "license": "GPL-3.0",
   "main": "index.js",
   "bin": {
-    "aat-confgen": "./bin/generate-aat-config.js"
+    "at-confgen": "./bin/generate-at-config.js"
   },
   "repository": "adaptlearning/adapt-authoring-config",
   "dependencies": {
