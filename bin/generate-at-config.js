@@ -7,7 +7,7 @@
  * @param {String} --update Will update existing configuration with any missing values
  */
 const ConfigUtils = require('adapt-authoring-config').Utils;
-const fs = require('fs-extra');
+const fs = require('fs/promises');
 const glob = require('glob');
 const path = require('path');
 const util = require('util');
@@ -50,7 +50,11 @@ async function init() {
   }
   try {
     await processDeps();
-    await fs.ensureDir(confDir);
+    try {
+      await fs.mkdir(confDir, { recursive: true });
+    } catch(e) {
+      if(e.code !== 'EEXIST') throw e;
+    }
     await fs.writeFile(outpath, `module.exports = ${JSON.stringify(configJson, null, 2)};`);
 
     console.log(`Config file written successfully to ${outpath}.\n`);

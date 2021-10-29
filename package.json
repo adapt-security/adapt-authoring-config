@@ -11,11 +11,8 @@
   "repository": "adaptlearning/adapt-authoring-config",
   "dependencies": {
     "adapt-authoring-core": "github:adapt-security/adapt-authoring-core",
-    "async": "3.1.0",
     "chalk": "^4.1.0",
-    "fs-extra": "7.0.0",
-    "glob": "^7.2.0",
-    "nconf": "0.10.0"
+    "glob": "^7.2.0"
   },
   "peerDependencies": {
     "adapt-authoring-core": "adapt-security/adapt-authoring-core"
