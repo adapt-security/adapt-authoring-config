@@ -3,7 +3,7 @@
   "documentation": {
     "enable": true,
     "manualPlugins": ["docs/plugins/configuration.js"],
-    "manualSections": {
+    "manualPages": {
       "configuration.md": "reference",
       "configure-environment.md": "basics",
       "defining-config.md": "basics"
