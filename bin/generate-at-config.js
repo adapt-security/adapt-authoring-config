@@ -71,8 +71,10 @@ async function init() {
 async function getDeps() {
   try {
     const depRoot = `${process.cwd()}/node_modules/`;
-    const files = await util.promisify(glob)(`${depRoot}**/adapt-authoring.json`);
-    return files.map(f => path.dirname(f).replace(depRoot, ''));
+    return (await util.promisify(glob)(`${depRoot}**/adapt-authoring.json`)).map(f => {
+      const dirname = path.dirname(f);
+      return [dirname.replace(depRoot, ''), dirname];
+    });
   } catch(e) {
     console.log(`Failed to load package`, e);
   }
@@ -80,8 +82,8 @@ async function getDeps() {
 
 async function processDeps() {
   const deps = await getDeps();
-  const promises = deps.map(async d => {
-    const schema = await ConfigUtils.loadConfigSchema(Utils.getModuleDir(d));
+  const promises = deps.map(async ([name, dir]) => {
+    const schema = await ConfigUtils.loadConfigSchema(dir);
     if(!schema) {
       return;
     }
@@ -89,13 +91,13 @@ async function processDeps() {
       config.required = schema.required && schema.required.includes(attr);
       if(useDefaults || config.required) {
         memo[attr] = getValueForAttr(attr, config);
-        if(config.required) requiredAttrs.push(`${d}.${attr}`);
+        if(config.required) requiredAttrs.push(`${name}.${attr}`);
       }
       return memo;
     }, {});
     Object.entries(generated).reduce((m,[k,v]) => {
-      if(!m[d]) m[d] = { [k]: v };
-      else if(!m[d].hasOwnProperty(k)) m[d][k] = v;
+      if(!m[name]) m[name] = { [k]: v };
+      else if(!m[name].hasOwnProperty(k)) m[name][k] = v;
       return m;
     }, configJson);
   });
