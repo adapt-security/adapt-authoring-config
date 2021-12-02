@@ -8,7 +8,7 @@
   "bin": {
     "at-confgen": "./bin/generate-at-config.js"
   },
-  "repository": "adaptlearning/adapt-authoring-config",
+  "repository": "github:adapt-security/adapt-authoring-config",
   "dependencies": {
     "adapt-authoring-core": "github:github:adapt-security/adapt-authoring-core",
     "chalk": "^4.1.0",
