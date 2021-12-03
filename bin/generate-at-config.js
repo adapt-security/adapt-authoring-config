@@ -6,7 +6,7 @@
  * @param {String} --replace Will override any existing values
  * @param {String} --update Will update existing configuration with any missing values
  */
-const ConfigUtils = require('adapt-authoring-config').Utils;
+const ConfigUtils = require('../lib/ConfigUtils');
 const fs = require('fs/promises');
 const glob = require('glob');
 const path = require('path');
