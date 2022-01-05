@@ -1,7 +1,7 @@
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
 
-class Configuration {
+export default class Configuration {
   constructor(app, config, outputDir) {
     this.app = app;
     this.outputDir = outputDir;
@@ -75,12 +75,10 @@ class Configuration {
     return JSON.stringify(config.default);
   }
   writeFile(data) {
-    let file = fs.readFileSync(path.join(__dirname, 'configuration.md')).toString();
+    let file = fs.readFileSync(new URL('configuration.md', import.meta.url)).toString();
     const outputPath = path.join(this.outputDir, 'configuration.md');
     Object.entries(data).forEach(([key,value]) => file = file.replace(`{{{${key}}}}`, value));
     fs.writeFileSync(outputPath, file);
     this.customFiles.push(outputPath);
   }
 }
-
-module.exports = Configuration;
