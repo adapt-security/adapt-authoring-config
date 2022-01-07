@@ -1,8 +1,0 @@
-{
-  "error.configfile": "Errors in config file",
-  "error.nonull": "Config value '%{attr}' cannot be null, expected %{type}",
-  "error.incorrectconfigtype": "'%{attr}' should be %{expectedType} (got %{actualType})",
-  "error.configvalidation": "Config value '%{attr}' failed validation (%{val})",
-  "error.missingconfigval": "Missing required value '%{attr}' (%{type})",
-  "error.defaultandrequired": "Config value '%{attr}' cannot be required and have a default value"
-}
