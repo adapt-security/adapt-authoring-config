@@ -19,7 +19,7 @@ export default class Configuration {
     Object.values(this.app.dependencies).forEach(c => {
       const confDir = path.join(c.rootDir, 'conf');
       try {
-        this.schemas[c.name] = require(path.join(confDir, 'config.schema.json'));
+        this.schemas[c.name] = JSON.parse(fs.readFileSync(path.join(confDir, 'config.schema.json')));
       } catch(e) {}
     });
   }
@@ -30,7 +30,7 @@ export default class Configuration {
     return output;
   }
   generateCodeExample() {
-    let output = '\`\`\`javascript\nmodule.exports = {\n';
+    let output = '\`\`\`javascript\nexport default {\n';
     Object.entries(this.schemas).forEach(([dep, schema]) => {
       output += `  '${dep}': {\n`;
       Object.entries(schema.properties).forEach(([attr, config]) => {
