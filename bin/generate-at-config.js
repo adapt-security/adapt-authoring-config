@@ -6,12 +6,11 @@
  * @param {String} --replace Will override any existing values
  * @param {String} --update Will update existing configuration with any missing values
  */
-const ConfigUtils = require('../lib/ConfigUtils');
-const fs = require('fs/promises');
-const glob = require('glob');
-const path = require('path');
-const util = require('util');
-const { Utils } = require('adapt-authoring-core');
+import fs from 'fs/promises';
+import glob from 'glob';
+import path from 'path';
+import util from 'util';
+import { Utils } from 'adapt-authoring-core';
 
 const { 
   defaults: useDefaults, 
