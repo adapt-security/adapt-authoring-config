@@ -54,7 +54,7 @@ import { Utils } from 'adapt-authoring-core';
      } catch(e) {
        if(e.code !== 'EEXIST') throw e;
      }
-     await fs.writeFile(outpath, `module.exports = ${JSON.stringify(configJson, null, 2)};`);
+     await fs.writeFile(outpath, `export default ${JSON.stringify(configJson, null, 2)};`);
  
      console.log(`Config file written successfully to ${outpath}.\n`);
      if(requiredAttrs.length) {
