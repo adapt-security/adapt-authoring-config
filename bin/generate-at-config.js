@@ -9,6 +9,7 @@
 import fs from 'fs/promises';
 import glob from 'glob';
 import path from 'path';
+ import { pathToFileURL } from 'url';
 import util from 'util';
 import { Utils } from 'adapt-authoring-core';
  
@@ -35,7 +36,7 @@ import { Utils } from 'adapt-authoring-core';
      return console.log('Default values will be included');
    }
    try {
-     Object.assign(configJson, require(outpath));
+      Object.assign(configJson, await import(pathToFileURL(outpath)));
      let msg = `Config already exists for NODE_ENV '${NODE_ENV}'. `;
      if(replaceExisting) {
        console.log(`${msg}All existing values will be replaced.`);
