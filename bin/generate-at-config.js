@@ -42,7 +42,7 @@ import { Utils } from 'adapt-authoring-core';
      } else if(updateExisting) {
        console.log(`${msg}Any missing values will be added.`);
      } else {
-       return console.log(`${msg}Must specified --replace or --update to make changes.`);
+        return console.log(`${msg}Must specifiy --replace or --update to make changes.`);
      }
    } catch(e) {
      console.log(`No config found for NODE_ENV '${NODE_ENV}'. File will be written to ${outpath}\n`);
