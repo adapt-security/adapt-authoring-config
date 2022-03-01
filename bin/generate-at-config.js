@@ -70,7 +70,7 @@ import { Utils } from 'adapt-authoring-core';
  
  async function getDeps() {
    try {
-     const depRoot = `${process.cwd()}/node_modules/`;
+     const depRoot = `${process.cwd()}/node_modules/`.replaceAll(path.sep, path.posix.sep);
      return (await util.promisify(glob)(`${depRoot}**/adapt-authoring.json`)).map(f => {
        const dirname = path.dirname(f);
        return [dirname.replace(depRoot, ''), dirname];
