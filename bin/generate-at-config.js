@@ -33,7 +33,7 @@ import { Utils } from 'adapt-authoring-core';
      return console.log('ERROR: --update and --replace cannot both be specified, please choose one and run the utility again');
    }
    if(useDefaults) {
-     return console.log('Default values will be included');
+     console.log('Default values will be included');
    }
    try {
       Object.assign(configJson, await import(pathToFileURL(outpath)));
