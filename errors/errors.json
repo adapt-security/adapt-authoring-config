@@ -1,0 +1,10 @@
+{
+  "FILE_SYNTAX_ERROR": {
+    "data": {
+      "path": "Path to the invalid file",
+      "message": "The error message"
+    },
+    "description": "File contains a syntax error",
+    "statusCode": 500
+  }
+}
