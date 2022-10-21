@@ -98,7 +98,7 @@ async function processDeps() {
       return memo;
     }, {});
     Object.entries(generated).reduce((m,[k,v]) => {
-      if(!m[name]) m[name] = { [k]: v };
+      if(!m.hasOwnProperty(name)) m[name] = { [k]: v };
       else if(!m[name].hasOwnProperty(k)) m[name][k] = v;
       return m;
     }, configJson);
@@ -108,7 +108,7 @@ async function processDeps() {
 
 function getValueForAttr(attr, config) {
   if(config.required) return null;
-  if(config.default) return config.default;
+  if(config.hasOwnProperty('default')) return config.default;
 }
 
 init();
