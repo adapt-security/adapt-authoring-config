@@ -36,11 +36,11 @@ async function init() {
     console.log('Default values will be included');
   }
   try {
-    Object.assign(configJson, await import(pathToFileURL(outpath)));
     let msg = `Config already exists for NODE_ENV '${NODE_ENV}'. `;
     if(replaceExisting) {
       console.log(`${msg}All existing values will be replaced.`);
     } else if(updateExisting) {
+      Object.assign(configJson, (await import(pathToFileURL(outpath))).default);
       console.log(`${msg}Any missing values will be added.`);
     } else {
       return console.log(`${msg}Must specifiy --replace or --update to make changes.`);
