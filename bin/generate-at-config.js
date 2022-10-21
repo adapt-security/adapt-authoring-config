@@ -112,4 +112,3 @@ function getValueForAttr(attr, config) {
 }
 
 init();
-  
