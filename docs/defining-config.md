@@ -36,3 +36,28 @@ The below example shows a few common configuration use-cases:
   "required": ["requiredAttribute"]
 }
 ```
+
+## Directory paths
+
+It may be necessary to define directory paths in your config schema (e.g. the assets module defines an `uploadDir` attribute). To make this simpler from a developer _and_ user perspective, you can make use of the special `isDirectory` JSON schema keyword which will automatically populate the value with a number of global directory paths.
+
+If `isDirectory` is set in a config schema, the configuration module will look for the following keys and replace them with the corresponding `adapt-authoring-core` config values:
+
+- `$ROOT` -> `adapt-authoring-core.rootDir`
+- `$DATA` -> `adapt-authoring-core.dataDir`
+- `$TEMP` -> `adapt-authoring-core.tempDir`
+
+This allows the user to specify just the `dataDir` and `tempDir` attributes, and you can be safe in the knowledge that your config schema value will resolve to the correct location.
+
+See the following JSON schema snippet as an example:
+
+```json
+{
+  "uploadDir": {
+    "type": "String",
+    "description": "Temporary file upload directory for myplugin",
+    "isDirectory": true,
+    "default": "$TEMP/myfiles"
+  },
+}
+```
