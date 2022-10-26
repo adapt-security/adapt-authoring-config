@@ -7,7 +7,7 @@
   "type":"module",
   "main": "index.js",
   "bin": {
-    "at-confgen": "./bin/generate-at-config.js"
+    "at-confgen": "./bin/confgen.js"
   },
   "repository": "github:adapt-security/adapt-authoring-config",
   "dependencies": {
