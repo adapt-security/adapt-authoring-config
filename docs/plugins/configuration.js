@@ -2,36 +2,28 @@ import fs from 'fs';
 import path from 'path';
 
 export default class Configuration {
-  constructor(app, config) {
-    this.app = app;
-    this.outputDir = config.outputDir;
-    this.customFiles = [];
-    this.schemas = {};
-
-    this.loadSchemas();
-    this.writeFile({
-      'TABLE_OF_CONTENTS': this.generateTOC(),
-      'CODE_EXAMPLE': this.generateCodeExample(),
-      'LIST': this.generateList()
-    });
+  async run() {
+    const schemas = this.loadSchemas();
+    this.contents = Object.keys(schemas);
+    this.manualFile = 'configuration.md';
+    this.replace = {
+      'CODE_EXAMPLE': this.generateCodeExample(schemas),
+      'LIST': this.generateList(schemas)
+    };
   }
   loadSchemas() {
+    const schemas = {};
     Object.values(this.app.dependencies).forEach(c => {
       const confDir = path.join(c.rootDir, 'conf');
       try {
-        this.schemas[c.name] = JSON.parse(fs.readFileSync(path.join(confDir, 'config.schema.json')));
+        schemas[c.name] = JSON.parse(fs.readFileSync(path.join(confDir, 'config.schema.json')));
       } catch(e) {}
     });
+    return schemas;
   }
-  generateTOC() {
-    let output = '';
-    Object.keys(this.schemas).forEach((dep) => output += `- [${dep}](#${dep})\n`);
-    output += '\n';
-    return output;
-  }
-  generateCodeExample() {
+  generateCodeExample(schemas) {
     let output = '\`\`\`javascript\nexport default {\n';
-    Object.entries(this.schemas).forEach(([dep, schema]) => {
+    Object.entries(schemas).forEach(([dep, schema]) => {
       output += `  '${dep}': {\n`;
       Object.entries(schema.properties).forEach(([attr, config]) => {
         const required = schema.required && schema.required.includes(attr);
@@ -41,13 +33,12 @@ export default class Configuration {
       output += `  },\n`;
     });
     output += `};\n\`\`\``;
-
     return output;
   }
-  generateList() {
+  generateList(schemas) {
     let output = '';
 
-    Object.entries(this.schemas).forEach(([dep, schema]) => {
+    Object.entries(schemas).forEach(([dep, schema]) => {
       output += `<h3 id="${dep}" class="dep">${dep}</h3>\n\n`;
       output += `<div class="options">\n`;
       Object.entries(schema.properties).forEach(([attr, config]) => {
@@ -73,12 +64,5 @@ export default class Configuration {
    */
   defaultToMd(config) {
     return JSON.stringify(config.default);
-  }
-  writeFile(data) {
-    let file = fs.readFileSync(new URL('configuration.md', import.meta.url)).toString();
-    const outputPath = path.join(this.outputDir, 'configuration.md');
-    Object.entries(data).forEach(([key,value]) => file = file.replace(`{{{${key}}}}`, value));
-    fs.writeFileSync(outputPath, file);
-    this.customFiles.push(outputPath);
   }
 }
