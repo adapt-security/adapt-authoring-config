@@ -23,7 +23,6 @@ const NODE_ENV = env || process.env.NODE_ENV;
 const confDir = path.resolve(path.join(process.cwd(), 'conf'));
 const outpath = path.join(confDir, `${NODE_ENV}.config.js`);
 const configJson = {};
-const requiredAttrs = [];
 
 async function init() {
   if(!NODE_ENV) {
@@ -35,21 +34,27 @@ async function init() {
   if(useDefaults) {
     console.log('Default values will be included');
   }
+  let isExistingConfig = false;
+  let existingConfig;
   try {
+    existingConfig = (await import(pathToFileURL(outpath))).default;
+    isExistingConfig = true;
+  } catch(e) {
+    console.log(`No config found for NODE_ENV '${NODE_ENV}'. File will be written to ${outpath}\n`);
+  }
+  if(isExistingConfig) {
     let msg = `Config already exists for NODE_ENV '${NODE_ENV}'. `;
     if(replaceExisting) {
       console.log(`${msg}All existing values will be replaced.`);
     } else if(updateExisting) {
-      Object.assign(configJson, (await import(pathToFileURL(outpath))).default);
       console.log(`${msg}Any missing values will be added.`);
+      Object.assign(configJson, existingConfig);
     } else {
       return console.log(`${msg}Must specifiy --replace or --update to make changes.`);
     }
-  } catch(e) {
-    console.log(`No config found for NODE_ENV '${NODE_ENV}'. File will be written to ${outpath}\n`);
   }
   try {
-    await processDeps();
+    await generateConfig();
     try {
       await fs.mkdir(confDir, { recursive: true });
     } catch(e) {
@@ -58,13 +63,22 @@ async function init() {
     await fs.writeFile(outpath, `export default ${JSON.stringify(configJson, null, 2)};`);
 
     console.log(`Config file written successfully to ${outpath}.\n`);
-    if(requiredAttrs.length) {
-      console.log('Note: the following required attributes have been given a value of null and must be set for the application to run:');
-      requiredAttrs.forEach(a => console.log(`- ${a}`));
-      console.log('');
-    }
+    
+    logRequired();
   } catch(e) {
     console.log(`ERROR: Failed to write ${outpath}\n${e}`);
+  }
+}
+
+function logRequired() {
+  const requiredAttrs = [];
+  Object.entries(configJson).forEach(([name, config]) => {
+    Object.entries(config).forEach(([key, value]) => value === null && requiredAttrs.push(`${name}.${key}`));
+  });
+  if(requiredAttrs.length) {
+    console.log('Note: the following required attributes have been given a value of null and must be set for the application to run:\n');
+    console.log(requiredAttrs.join('\n'));
+    console.log('');
   }
 }
 
@@ -80,33 +94,34 @@ async function getDeps() {
   }
 }
 
-async function processDeps() {
-  const deps = await getDeps();
-  const promises = deps.map(async ([name, dir]) => {
+async function generateConfig() {
+  await Promise.all((await getDeps()).map(async ([name, dir]) => {
     let schema;
     try {
       schema = schema = JSON.parse(await fs.readFile(path.resolve(dir, 'conf/config.schema.json')));
     } catch(e) {
       return;
     }
-    const generated = Object.entries(schema.properties).reduce((memo, [attr, config]) => {
-      config.required = schema.required && schema.required.includes(attr);
-      if(useDefaults || config.required) {
-        memo[attr] = getValueForAttr(attr, config);
-        if(config.required) requiredAttrs.push(`${name}.${attr}`);
-      }
-      return memo;
-    }, {});
-    Object.entries(generated).reduce((m,[k,v]) => {
-      if(!m.hasOwnProperty(name)) m[name] = { [k]: v };
-      else if(!m[name].hasOwnProperty(k)) m[name][k] = v;
-      return m;
-    }, configJson);
-  });
-  await Promise.all(promises);
+    if(!configJson[name]) {
+      configJson[name] = {};
+    }
+    const storeDefaultsRecursive = (schema, defaults = {}) => {
+      return Object.entries(schema.properties).reduce((memo, [attr, config]) => {
+        if(config.type === 'object' && config.properties) {
+          return { ...memo, [attr]: storeDefaultsRecursive(config, memo) };
+        }
+        config.required = schema?.required?.includes(attr) ?? false;
+        if((replaceExisting || !memo.hasOwnProperty(attr)) && useDefaults && config.hasOwnProperty('default') || config.required) {
+          memo[attr] = getValueForAttr(config);
+        }
+        return memo;
+      }, defaults);
+    };
+    storeDefaultsRecursive(schema, configJson[name]);
+  }));
 }
 
-function getValueForAttr(attr, config) {
+function getValueForAttr(config) {
   if(config.required) return null;
   if(config.hasOwnProperty('default')) return config.default;
 }
