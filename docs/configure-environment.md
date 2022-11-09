@@ -13,10 +13,10 @@ Express.js has a number of [performance enhancing features](https://expressjs.co
 
 ### Creating your config
 
-Each config file is a JavaScript file which exports a single Object (i.e. `module.exports = {}`). Within this file, settings are grouped by module.
+Each config file is a JavaScript file which exports a single object. Within this file, settings are grouped by module:
 
 ```Javascript
-module.exports = {
+export default {
   'modulename': {
     // settings
   }
@@ -41,13 +41,13 @@ See the [Bin scripts](binscripts#at-confgen) page for more information, included
 
 You can do this temporarily using the following:
 
-**Bash**:
+**Bash/Mac OS Terminal**:
 ```bash
 $ NODE_ENV=dev npm start
 ```
-**Powershell**:
+**Windows Powershell/Command Prompt**:
 ```bash
-> set NODE_ENV=dev && npm start
+> set NODE_ENV=dev | npm start
 ```
 
-Please see the documentation for your own operating system for instructions on how to set environment variables correctly.
+Please see the documentation for your own operating system for instructions on how to save environment variables in a more permanent way.
