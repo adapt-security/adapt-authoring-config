@@ -105,20 +105,22 @@ async function generateConfig() {
     if(!configJson[name]) {
       configJson[name] = {};
     }
-    const storeDefaultsRecursive = (schema, defaults = {}) => {
-      return Object.entries(schema.properties).reduce((memo, [attr, config]) => {
-        if(config.type === 'object' && config.properties) {
-          return { ...memo, [attr]: storeDefaultsRecursive(config, memo) };
-        }
-        config.required = schema?.required?.includes(attr) ?? false;
-        if((replaceExisting || !memo.hasOwnProperty(attr)) && useDefaults && config.hasOwnProperty('default') || config.required) {
-          memo[attr] = getValueForAttr(config);
-        }
-        return memo;
-      }, defaults);
-    };
-    storeDefaultsRecursive(schema, configJson[name]);
+    storeDefaults(schema, configJson[name]);
+    // remove any empty objects
+    Object.entries(configJson).forEach(([key, config]) => !Object.keys(config).length && delete configJson[key]);
   }));
+}
+function storeDefaults(schema, defaults = {}) {
+  return Object.entries(schema.properties).reduce((memo, [attr, config]) => {
+    if(config.type === 'object' && config.properties) {
+      return { ...memo, [attr]: storeDefaults(config, memo) };
+    }
+    config.required = schema?.required?.includes(attr) ?? false;
+    if((replaceExisting || !memo.hasOwnProperty(attr)) && useDefaults && config.hasOwnProperty('default') || config.required) {
+      memo[attr] = getValueForAttr(config);
+    }
+    return memo;
+  }, defaults);
 }
 
 function getValueForAttr(config) {
