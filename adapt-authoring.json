@@ -1,5 +1,5 @@
 {
-  "isEssential": true,
+  "essentialType": "config",
   "documentation": {
     "enable": true,
     "manualPlugins": ["docs/plugins/configuration.js"],
