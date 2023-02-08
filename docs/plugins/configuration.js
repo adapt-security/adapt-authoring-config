@@ -4,7 +4,7 @@ import path from 'path';
 export default class Configuration {
   async run() {
     const schemas = this.loadSchemas();
-    this.contents = Object.keys(schemas);
+    this.contents = Object.keys(schemas).sort();
     this.manualFile = 'configuration.md';
     this.replace = {
       'CODE_EXAMPLE': this.generateCodeExample(schemas),
@@ -23,8 +23,9 @@ export default class Configuration {
   }
   generateCodeExample(schemas) {
     let output = '\`\`\`javascript\nexport default {\n';
-    Object.entries(schemas).forEach(([dep, schema]) => {
-      output += `  '${dep}': {\n`;
+    this.contents.forEach((name) => {
+      const schema = schemas[name];
+      output += `  '${name}': {\n`;
       Object.entries(schema.properties).forEach(([attr, config]) => {
         const required = schema.required && schema.required.includes(attr);
         if(config.description) output += `    // ${config.description}\n`;
@@ -38,7 +39,8 @@ export default class Configuration {
   generateList(schemas) {
     let output = '';
 
-    Object.entries(schemas).forEach(([dep, schema]) => {
+    this.contents.forEach(dep => {
+      const schema = schemas[dep];
       output += `<h3 id="${dep}" class="dep">${dep}</h3>\n\n`;
       output += `<div class="options">\n`;
       Object.entries(schema.properties).forEach(([attr, config]) => {
