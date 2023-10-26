@@ -7,10 +7,9 @@
  * @param {String} --update Will update existing configuration with any missing values
  */
 import fs from 'fs/promises'
-import glob from 'glob'
+import { globSync } from 'glob'
 import path from 'path'
 import { pathToFileURL } from 'url'
-import util from 'util'
 import { Utils } from 'adapt-authoring-core'
 
 const {
@@ -85,7 +84,7 @@ function logRequired () {
 async function getDeps () {
   try {
     const depRoot = `${process.cwd()}/node_modules/`.replaceAll(path.sep, path.posix.sep)
-    return (await util.promisify(glob)(`${depRoot}**/adapt-authoring.json`)).map(f => {
+    return globSync(`${depRoot}**/adapt-authoring.json`).map(f => {
       const dirname = path.dirname(f)
       return [dirname.replace(depRoot, ''), dirname]
     })
