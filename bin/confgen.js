@@ -126,7 +126,7 @@ function storeDefaults (schema, defaults = {}) {
 
 function getValueForAttr (config) {
   if (config.required) return null
-  if (config.hasOwnProperty('default')) return config.default
+  if (Object.prototype.hasOwnProperty.call(config, 'default')) return config.default
 }
 
 init()
