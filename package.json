@@ -2,7 +2,7 @@
   "name": "adapt-authoring-config",
   "version": "0.0.1",
   "description": "A configuration module for the Adapt authoring tool.",
-  "homepage": "https://github.com/adaptlearning/adapt-authoring-config",
+  "homepage": "https://github.com/adapt-security/adapt-authoring-config",
   "license": "GPL-3.0",
   "type": "module",
   "main": "index.js",
