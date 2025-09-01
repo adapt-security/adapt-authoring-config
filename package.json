@@ -1,6 +1,6 @@
 {
   "name": "adapt-authoring-config",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "A configuration module for the Adapt authoring tool.",
   "homepage": "https://github.com/adapt-security/adapt-authoring-config",
   "license": "GPL-3.0",
