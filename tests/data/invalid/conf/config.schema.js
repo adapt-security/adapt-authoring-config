@@ -5,4 +5,4 @@ module.exports = {
       validator: val => val === 4
     }
   }
-};
+}
