@@ -69,6 +69,6 @@ export default class Configuration {
    * Returns a string formatted nicely for markdown
    */
   defaultToMd (config) {
-    return JSON.stringify(config.default)
+    return JSON.stringify(config.default, null, 2)?.replaceAll('\n', '\n    ')
   }
 }
