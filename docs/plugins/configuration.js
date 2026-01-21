@@ -53,7 +53,7 @@ export default class Configuration {
         output += '<div class="inner">\n'
         output += `<div class="description">${config.description}</div>\n`
         if (!required) {
-          output += `<div class="default"><span class="label">Default</span>: <pre>${this.defaultToMd(config)}</pre></div>\n`
+          output += `<div class="default"><span class="label">Default</span>: <pre class="no-bg">${this.defaultToMd(config)}</pre></div>\n`
         }
         output += '</div>\n'
         output += '</div>\n'
