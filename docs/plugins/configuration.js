@@ -69,7 +69,7 @@ export default class Configuration {
    * Returns a string formatted nicely for markdown
    */
   defaultToMd (config) {
-    let s = JSON.stringify(config.default, null, 2)
+    const s = JSON.stringify(config.default, null, 2)
     return s?.length < 75 ? s : s?.replaceAll('\n', '\n    ')
   }
 }
