@@ -5,8 +5,7 @@
     "manualPlugins": ["docs/plugins/configuration.js"],
     "manualPages": {
       "configuration.md": "reference",
-      "configure-environment.md": "getting-started",
-      "defining-config.md": "basics"
+      "configure-environment.md": "getting-started"
     }
   }
 }
