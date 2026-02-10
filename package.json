@@ -9,6 +9,9 @@
   "bin": {
     "at-confgen": "./bin/confgen.js"
   },
+  "scripts": {
+    "test": "node --test tests/*.spec.js"
+  },
   "repository": "github:adapt-security/adapt-authoring-config",
   "dependencies": {
     "adapt-authoring-core": "github:adapt-security/adapt-authoring-core",
