@@ -45,6 +45,8 @@ describe('ConfigModule', () => {
     })
 
     it('should handle env vars without double underscore', () => {
+      // When no __ separator exists, key will be undefined
+      // This documents the current behavior of the function
       const result = instance.envVarToConfigKey('ADAPT_AUTHORING_TEST')
       assert.equal(result, 'adapt-authoring-test.undefined')
     })
