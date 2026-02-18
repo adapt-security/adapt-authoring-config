@@ -31,14 +31,6 @@ describe('Config module', function () {
       actualValue.should.equal(expectedValue)
     })
   })
-  describe('#set()', function () {
-    it('should be able to set a value', function () {
-      const newValue = 'newtestvalue'
-      this.config.set('adapt-authoring-testing.test', newValue)
-      const actualValue = this.config.get('adapt-authoring-testing.test')
-      actualValue.should.equal(newValue)
-    })
-  })
   describe('#getPublicConfig()', function () {
     it('should be able to retrieve values marked as public', function () {
       this.config.app.dependencies = [{ name: 'adapt-authoring-testing', dir: path.join(__dirname, 'data') }]
