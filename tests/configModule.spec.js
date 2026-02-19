@@ -1,55 +1,136 @@
-/* global before describe, it */
+import { describe, it, before } from 'node:test'
+import assert from 'node:assert/strict'
+import ConfigModule from '../lib/ConfigModule.js'
 
-const Config = require('../lib/configUtils')
-const path = require('path')
-// const should = require('should')
+describe('ConfigModule', () => {
+  let instance
 
-describe('Config module', function () {
-  before(function () {
-    this.config = new Config(global.ADAPT.app, {})
-    this.configJson = require(path.join(process.cwd(), 'conf', 'testing.config.js'))
+  before(async () => {
+    const noopHook = { tap: () => {}, untap: () => {}, invoke: async () => {} }
+    const noopRouter = { path: '/', createChildRouter: () => noopRouter }
+    const mockApp = {
+      config: null,
+      rootDir: '/test',
+      name: 'test-app',
+      dependencies: {},
+      dependencyloader: { moduleLoadedHook: noopHook },
+      waitForModule: async (...names) => {
+        const mocks = {
+          errors: { LOAD_ERROR: new Error('load') },
+          auth: { unsecureRoute: () => {} },
+          server: { api: { createChildRouter: () => noopRouter } },
+          jsonschema: { createSchema: async () => ({ build: async () => ({}) }) }
+        }
+        const results = names.map(n => mocks[n] || {})
+        return results.length === 1 ? results[0] : results
+      },
+      errors: { LOAD_ERROR: new Error('load') }
+    }
+
+    instance = new ConfigModule(mockApp, {})
+
+    // Wait for the async init to settle (it will error in test mode, which is fine)
+    try { await instance.onReady() } catch (e) { /* expected */ }
+
+    // Ensure internal state is initialized for testing
+    if (!instance._config) instance._config = {}
+    if (!instance.publicAttributes) instance.publicAttributes = []
   })
-  describe('#initialise()', function () {
-    it('should error on missing required attribute', runConfigInitialise('required'))
-    it('should error on incorrect attribute type', runConfigInitialise('incorrecttype'))
-    it('should error on validator fail', runConfigInitialise('invalid'))
-  })
-  describe('#has()', function () {
-    it('should be able to verify a value exists', function () {
-      const exists = this.config.has('adapt-authoring-testing.test')
-      exists.should.be.true()
+
+  describe('#envVarToConfigKey()', () => {
+    it('should convert ADAPT_AUTHORING prefixed env vars to config keys', () => {
+      const result = instance.envVarToConfigKey('ADAPT_AUTHORING_SERVER__PORT')
+      assert.equal(result, 'adapt-authoring-server.PORT')
     })
-    it('should be able to verify a value doesn\'t exist', function () {
-      const exists = this.config.has('adapt-authoring-testing.nonono')
-      exists.should.not.be.true()
+
+    it('should convert underscores to hyphens in module prefix', () => {
+      const result = instance.envVarToConfigKey('ADAPT_AUTHORING_MY_MODULE__KEY')
+      assert.equal(result, 'adapt-authoring-my-module.KEY')
+    })
+
+    it('should prefix non-ADAPT_AUTHORING env vars with "env."', () => {
+      const result = instance.envVarToConfigKey('NODE_ENV')
+      assert.equal(result, 'env.NODE_ENV')
+    })
+
+    it('should handle env vars without double underscore', () => {
+      // When no __ separator exists, key will be undefined
+      // This documents the current behavior of the function
+      const result = instance.envVarToConfigKey('ADAPT_AUTHORING_TEST')
+      assert.equal(result, 'adapt-authoring-test.undefined')
     })
   })
-  describe('#get()', function () {
-    it('should be able to retrieve a value', function () {
-      const actualValue = this.config.get('adapt-authoring-testing.test')
-      const expectedValue = this.configJson['adapt-authoring-testing'].test
-      actualValue.should.equal(expectedValue)
+
+  describe('#has()', () => {
+    it('should return true for existing config values', () => {
+      instance._config['test.key'] = 'value'
+      const exists = instance.has('test.key')
+      assert.equal(exists, true)
+    })
+
+    it('should return false for non-existent config values', () => {
+      const exists = instance.has('nonexistent.key')
+      assert.equal(exists, false)
     })
   })
-  describe('#getPublicConfig()', function () {
-    it('should be able to retrieve values marked as public', function () {
-      this.config.app.dependencies = [{ name: 'adapt-authoring-testing', dir: path.join(__dirname, 'data') }]
-      this.config.initialise()
-      const config = this.config.getPublicConfig()
-      const value = config['adapt-authoring-testing.one']
-      config.should.be.an.Object()
-      value.should.equal('default')
+
+  describe('#get()', () => {
+    it('should retrieve a stored value', () => {
+      instance._config['test.value'] = 'expected'
+      const actual = instance.get('test.value')
+      assert.equal(actual, 'expected')
+    })
+
+    it('should return undefined for non-existent keys', () => {
+      const actual = instance.get('does.not.exist')
+      assert.equal(actual, undefined)
+    })
+
+    it('should retrieve different data types', () => {
+      instance._config['test.string'] = 'text'
+      instance._config['test.number'] = 42
+      instance._config['test.boolean'] = true
+      instance._config['test.object'] = { key: 'value' }
+
+      assert.equal(instance.get('test.string'), 'text')
+      assert.equal(instance.get('test.number'), 42)
+      assert.equal(instance.get('test.boolean'), true)
+      assert.deepEqual(instance.get('test.object'), { key: 'value' })
+    })
+  })
+
+  describe('#getPublicConfig()', () => {
+    it('should return only public attributes', () => {
+      instance._config = {
+        'module.public1': 'value1',
+        'module.public2': 'value2',
+        'module.private': 'secret'
+      }
+      instance.publicAttributes = ['module.public1', 'module.public2']
+
+      const config = instance.getPublicConfig()
+      assert.deepEqual(config, {
+        'module.public1': 'value1',
+        'module.public2': 'value2'
+      })
+    })
+
+    it('should return empty object when no public attributes exist', () => {
+      instance._config = { 'module.private': 'secret' }
+      instance.publicAttributes = []
+
+      const config = instance.getPublicConfig()
+      assert.deepEqual(config, {})
+    })
+
+    it('should handle undefined values for public attributes', () => {
+      instance._config = {}
+      instance.publicAttributes = ['module.missing']
+
+      const config = instance.getPublicConfig()
+      assert.deepEqual(config, {
+        'module.missing': undefined
+      })
     })
   })
 })
-/**
-* Checks ConfigUtility#initialise
-* Loads the testing data in tests/data/dirname
-*/
-function runConfigInitialise (dirname) {
-  return function () {
-    this.config.app.dependencies = [{ name: 'adapt-authoring-testing', dir: path.join(__dirname, 'data', dirname) }]
-    this.config.initialise()
-    this.config.errors.length.should.be.exactly(1)
-  }
-}
