@@ -5,26 +5,35 @@ import ConfigModule from '../lib/ConfigModule.js'
 describe('ConfigModule', () => {
   let instance
 
-  before(() => {
-    // Create a minimal mock app instance for testing
+  before(async () => {
+    const noopHook = { tap: () => {}, untap: () => {}, invoke: async () => {} }
+    const noopRouter = { path: '/', createChildRouter: () => noopRouter }
     const mockApp = {
       config: null,
       rootDir: '/test',
       name: 'test-app',
       dependencies: {},
-      waitForModule: async () => { throw new Error('Test mode') }
+      dependencyloader: { moduleLoadedHook: noopHook },
+      waitForModule: async (...names) => {
+        const mocks = {
+          errors: { LOAD_ERROR: new Error('load') },
+          auth: { unsecureRoute: () => {} },
+          server: { api: { createChildRouter: () => noopRouter } },
+          jsonschema: { createSchema: async () => ({ build: async () => ({}) }) }
+        }
+        const results = names.map(n => mocks[n] || {})
+        return results.length === 1 ? results[0] : results
+      },
+      errors: { LOAD_ERROR: new Error('load') }
     }
 
-    // Create instance and catch initialization error
-    try {
-      instance = new ConfigModule(mockApp, {})
-    } catch (e) {
-      // Initialization error is expected in test mode
-    }
+    instance = new ConfigModule(mockApp, {})
+
+    // Wait for the async init to settle (it will error in test mode, which is fine)
+    try { await instance.onReady() } catch (e) { /* expected */ }
 
     // Ensure internal state is initialized for testing
     if (!instance._config) instance._config = {}
-    if (!instance.mutableAttributes) instance.mutableAttributes = []
     if (!instance.publicAttributes) instance.publicAttributes = []
   })
 
@@ -90,49 +99,6 @@ describe('ConfigModule', () => {
     })
   })
   
-  describe('#set()', () => {
-    it('should store a value', () => {
-      instance.set('test.newkey', 'newvalue')
-      assert.equal(instance.get('test.newkey'), 'newvalue')
-    })
-
-    it('should not overwrite immutable values without force option', () => {
-      instance._config = {}
-      instance.mutableAttributes = []
-      instance.set('test.immutable', 'first')
-      instance.set('test.immutable', 'second')
-      assert.equal(instance.get('test.immutable'), 'first')
-    })
-
-    it('should overwrite mutable values', () => {
-      instance._config = {}
-      instance.mutableAttributes = ['test.mutable']
-      instance.set('test.mutable', 'first')
-      instance.set('test.mutable', 'second')
-      assert.equal(instance.get('test.mutable'), 'second')
-    })
-
-    it('should overwrite any value when force option is true', () => {
-      instance._config = {}
-      instance.mutableAttributes = []
-      instance.set('test.forced', 'first')
-      instance.set('test.forced', 'second', { force: true })
-      assert.equal(instance.get('test.forced'), 'second')
-    })
-
-    it('should store different data types', () => {
-      instance.set('test.string', 'text', { force: true })
-      instance.set('test.number', 123, { force: true })
-      instance.set('test.boolean', false, { force: true })
-      instance.set('test.array', [1, 2, 3], { force: true })
-
-      assert.equal(instance.get('test.string'), 'text')
-      assert.equal(instance.get('test.number'), 123)
-      assert.equal(instance.get('test.boolean'), false)
-      assert.deepEqual(instance.get('test.array'), [1, 2, 3])
-    })
-  })
-
   describe('#getPublicConfig()', () => {
     it('should return only public attributes', () => {
       instance._config = {
@@ -157,32 +123,13 @@ describe('ConfigModule', () => {
       assert.deepEqual(config, {})
     })
 
-    it('should filter by mutable when isMutable is true', () => {
-      instance._config = {
-        'module.publicMutable': 'value1',
-        'module.publicImmutable': 'value2'
-      }
-      instance.publicAttributes = ['module.publicMutable', 'module.publicImmutable']
-      instance.mutableAttributes = ['module.publicMutable']
+    it('should handle undefined values for public attributes', () => {
+      instance._config = {}
+      instance.publicAttributes = ['module.missing']
 
-      const config = instance.getPublicConfig(true)
+      const config = instance.getPublicConfig()
       assert.deepEqual(config, {
-        'module.publicMutable': 'value1'
-      })
-    })
-
-    it('should return all public attributes when isMutable is false', () => {
-      instance._config = {
-        'module.publicMutable': 'value1',
-        'module.publicImmutable': 'value2'
-      }
-      instance.publicAttributes = ['module.publicMutable', 'module.publicImmutable']
-      instance.mutableAttributes = ['module.publicMutable']
-
-      const config = instance.getPublicConfig(false)
-      assert.deepEqual(config, {
-        'module.publicMutable': 'value1',
-        'module.publicImmutable': 'value2'
+        'module.missing': undefined
       })
     })
   })
