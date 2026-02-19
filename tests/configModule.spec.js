@@ -98,7 +98,7 @@ describe('ConfigModule', () => {
       assert.deepEqual(instance.get('test.object'), { key: 'value' })
     })
   })
-  
+
   describe('#getPublicConfig()', () => {
     it('should return only public attributes', () => {
       instance._config = {
