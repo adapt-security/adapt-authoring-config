@@ -89,7 +89,7 @@ describe('ConfigModule', () => {
       assert.deepEqual(instance.get('test.object'), { key: 'value' })
     })
   })
-
+  
   describe('#set()', () => {
     it('should store a value', () => {
       instance.set('test.newkey', 'newvalue')

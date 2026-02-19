@@ -1,6 +1,6 @@
 {
   "name": "adapt-authoring-config",
-  "version": "1.1.4",
+  "version": "1.2.0",
   "description": "A configuration module for the Adapt authoring tool.",
   "homepage": "https://github.com/adapt-security/adapt-authoring-config",
   "license": "GPL-3.0",
@@ -14,12 +14,29 @@
   },
   "repository": "github:adapt-security/adapt-authoring-config",
   "dependencies": {
-    "adapt-authoring-core": "github:adapt-security/adapt-authoring-core",
+    "adapt-authoring-core": "^1.7.0",
     "chalk": "^5.3.0",
     "glob": "^13.0.0"
   },
   "peerDependencies": {
-    "adapt-authoring-core": "github:adapt-security/adapt-authoring-core"
+    "adapt-authoring-auth": "^1.0.7",
+    "adapt-authoring-errors": "^1.1.2",
+    "adapt-authoring-jsonschema": "^1.2.0",
+    "adapt-authoring-server": "^1.2.1"
+  },
+  "peerDependenciesMeta": {
+    "adapt-authoring-auth": {
+      "optional": true
+    },
+    "adapt-authoring-errors": {
+      "optional": true
+    },
+    "adapt-authoring-jsonschema": {
+      "optional": true
+    },
+    "adapt-authoring-server": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@semantic-release/git": "^10.0.1",
@@ -43,7 +60,15 @@
       ],
       "@semantic-release/npm",
       "@semantic-release/github",
-      "@semantic-release/git"
+      [
+        "@semantic-release/git",
+        {
+          "assets": [
+            "package.json"
+          ],
+          "message": "Chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+        }
+      ]
     ]
   }
 }
