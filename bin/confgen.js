@@ -10,14 +10,14 @@ import fs from 'fs/promises'
 import { globSync } from 'glob'
 import path from 'path'
 import { pathToFileURL } from 'url'
-import { Utils } from 'adapt-authoring-core'
+import { getArgs } from 'adapt-authoring-core'
 
 const {
   defaults: useDefaults,
   params: [env],
   replace: replaceExisting,
   update: updateExisting
-} = Utils.getArgs()
+} = getArgs()
 const NODE_ENV = env || process.env.NODE_ENV
 const confDir = path.resolve(path.join(process.cwd(), 'conf'))
 const outpath = path.join(confDir, `${NODE_ENV}.config.js`)
