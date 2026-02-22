@@ -1,6 +1,7 @@
 import { describe, it, before } from 'node:test'
 import assert from 'node:assert/strict'
 import ConfigModule from '../lib/ConfigModule.js'
+import { envVarToConfigKey } from '../lib/utils.js'
 
 describe('ConfigModule', () => {
   let instance
@@ -37,26 +38,26 @@ describe('ConfigModule', () => {
     if (!instance.publicAttributes) instance.publicAttributes = []
   })
 
-  describe('#envVarToConfigKey()', () => {
+  describe('envVarToConfigKey()', () => {
     it('should convert ADAPT_AUTHORING prefixed env vars to config keys', () => {
-      const result = instance.envVarToConfigKey('ADAPT_AUTHORING_SERVER__PORT')
+      const result = envVarToConfigKey('ADAPT_AUTHORING_SERVER__PORT')
       assert.equal(result, 'adapt-authoring-server.PORT')
     })
 
     it('should convert underscores to hyphens in module prefix', () => {
-      const result = instance.envVarToConfigKey('ADAPT_AUTHORING_MY_MODULE__KEY')
+      const result = envVarToConfigKey('ADAPT_AUTHORING_MY_MODULE__KEY')
       assert.equal(result, 'adapt-authoring-my-module.KEY')
     })
 
     it('should prefix non-ADAPT_AUTHORING env vars with "env."', () => {
-      const result = instance.envVarToConfigKey('NODE_ENV')
+      const result = envVarToConfigKey('NODE_ENV')
       assert.equal(result, 'env.NODE_ENV')
     })
 
     it('should handle env vars without double underscore', () => {
       // When no __ separator exists, key will be undefined
       // This documents the current behavior of the function
-      const result = instance.envVarToConfigKey('ADAPT_AUTHORING_TEST')
+      const result = envVarToConfigKey('ADAPT_AUTHORING_TEST')
       assert.equal(result, 'adapt-authoring-test.undefined')
     })
   })
