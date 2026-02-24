@@ -1,4 +1,0 @@
-scenarios:
-  - flow:
-    - get:
-        url: "/config"
