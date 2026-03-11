@@ -51,3 +51,28 @@ $ NODE_ENV=dev npm start
 ```
 
 Please see the documentation for your own operating system for instructions on how to save environment variables in a more permanent way.
+
+## Using environment variables for configuration
+
+As an alternative to config files, any configuration option can be set via an environment variable using the following naming convention:
+
+```
+ADAPT_AUTHORING_<MODULE>__<property>
+```
+
+- The module name is converted to uppercase with underscores replacing hyphens (e.g. `adapt-authoring-server` becomes `ADAPT_AUTHORING_SERVER`)
+- A double underscore (`__`) separates the module name from the property name
+- The property name is kept in its original camelCase format
+
+For example:
+
+| Environment variable | Config equivalent |
+| --- | --- |
+| `ADAPT_AUTHORING_SERVER__host` | `adapt-authoring-server.host` |
+| `ADAPT_AUTHORING_SERVER__port` | `adapt-authoring-server.port` |
+| `ADAPT_AUTHORING_MONGODB__connectionUri` | `adapt-authoring-mongodb.connectionUri` |
+| `ADAPT_AUTHORING_AUTH_LOCAL__saltRounds` | `adapt-authoring-auth-local.saltRounds` |
+
+Values are parsed as JSON where possible, so non-string types like numbers and booleans can be set directly (e.g. `ADAPT_AUTHORING_SERVER__port=5678`).
+
+Any environment variables that do not start with `ADAPT_AUTHORING_` are available under the `env` namespace (e.g. `NODE_ENV` becomes `env.NODE_ENV`).
