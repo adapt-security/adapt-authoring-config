@@ -19,8 +19,7 @@ describe('ConfigModule', () => {
         const mocks = {
           errors: { LOAD_ERROR: new Error('load') },
           auth: { unsecureRoute: () => {} },
-          server: { api: { createChildRouter: () => noopRouter } },
-          jsonschema: { createSchema: async () => ({ build: async () => ({}) }) }
+          server: { api: { createChildRouter: () => noopRouter } }
         }
         const results = names.map(n => mocks[n] || {})
         return results.length === 1 ? results[0] : results
